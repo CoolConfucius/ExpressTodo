@@ -6,6 +6,8 @@ function init() {
   populateTodos();
   $('#addTodo').click(addTodo);
   $('#removeComplete').click(removeComplete);
+  $('#showIncomplete').click(showIncomplete);
+  $('#showAll').click(showAll);
   $('#output').on('click', '.toggle', toggle);
   $('#output').on('click', '.remove', remove);
 }
@@ -84,4 +86,27 @@ function removeComplete(){
     url: "/todos",
     method: "DELETE"
   }); 
+}
+
+function showIncomplete(){
+ $.get('/todos', function(data) {
+    var filtered = data.filter(function(entry){
+      return (entry.completion === "incomplete"); 
+    });
+    var $todos = filtered.map(function(item) {
+      var $item = $('<div>').addClass('item row'); 
+      var $task = $('<span>').text(item.task).addClass('col-xs-7 task'); 
+      var $completion = $('<span>').text(item.completion).addClass('col-xs-2 completion'); 
+      var $toggle = $('<button>').addClass('toggle col-xs-1 btn btn-primary btn-sm').text('Toggle');
+      var $remove = $('<button>').addClass('remove col-xs-1 btn btn-danger btn-sm').text('X');
+      $item.append($task, $completion, $toggle, $remove);
+      return $item;
+    });
+    $('#output').empty().append($todos);
+  }); 
+}
+
+function showAll(){
+  $('#output').empty();
+  populateTodos();
 }
