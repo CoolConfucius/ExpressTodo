@@ -39,12 +39,36 @@ app.post('/todos', function(req, res) {
     }
 
     arr.push(todo);
-    fs.writeFile('./tasks.json', JSON.stringify(arr), function(err) {
+    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
       if(err) return res.status(400).send(err);
       res.send();
     });
   });
 });
+
+
+app.put('/todos/:itemindex', function(req, res) {
+  console.log(req.params);
+  var index = parseInt(req.params.itemindex);
+  fs.readFile('./todos.json', function(err, data) {
+    if(err) return res.status(400).send(err);
+    var arr = JSON.parse(data);
+    // arr.splice(index, 1); 
+    if (arr[index].completion === "incomplete") {
+      arr[index].completion = "complete"; 
+    } else {
+      arr[index].completion = "incomplete"; 
+    };
+    
+    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
+      if(err) return res.status(400).send(err);
+      res.send();
+    });
+  });
+
+});
+
+
 
 // spin up server
 app.listen(PORT, function() {
