@@ -21,24 +21,24 @@ app.get('/', function(req, res) {
   res.send(html);
 });
 
-app.get('/tasks', function(req, res) {
-  fs.readFile('./tasks.json', function(err, data) {
+app.get('/todos', function(req, res) {
+  fs.readFile('./todos.json', function(err, data) {
     if(err) return res.status(400).send(err);
     var arr = JSON.parse(data);
     res.send(arr);
   });
 });
 
-app.post('/tasks', function(req, res) {
-  fs.readFile('./tasks.json', function(err, data) {
+app.post('/todos', function(req, res) {
+  fs.readFile('./todos.json', function(err, data) {
     if(err) return res.status(400).send(err);
     var arr = JSON.parse(data);
-    var item = {
+    var todo = {
       task: req.body.task, 
       completion: req.body.completion
     }
 
-    arr.push(item);
+    arr.push(todo);
     fs.writeFile('./tasks.json', JSON.stringify(arr), function(err) {
       if(err) return res.status(400).send(err);
       res.send();
