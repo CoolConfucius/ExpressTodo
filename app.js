@@ -50,7 +50,6 @@ app.post('/todos', function(req, res) {
 
 
 app.put('/todos/:itemindex', function(req, res) {
-  console.log(req.params);
   var index = parseInt(req.params.itemindex);
   fs.readFile('./todos.json', function(err, data) {
     if(err) return res.status(400).send(err);

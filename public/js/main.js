@@ -6,7 +6,8 @@ function init() {
   populateTodos();
   $('#addTodo').click(addTodo);
   $('#removeComplete').click(removeComplete);
-  $('#showIncomplete').click(showIncomplete);
+  $('#showIncomplete').click(filter);
+  $('#showComplete').click(filter);
   $('#showAll').click(showAll);
   $('#output').on('click', '.toggle', toggle);
   $('#output').on('click', '.remove', remove);
@@ -14,7 +15,13 @@ function init() {
 
 function addTodo() {
   var newTask = $('#newTask').val();
+  if (!newTask) {
+    alert("Enter a task to do.");
+    return; 
+  };
+  
   var newDue = $('#newDue').val(); 
+  
   $.post('/todos', { task: newTask, completion: "incomplete", due: newDue })
   .success(function(data) {
     var $item = $('<div>').addClass('item row'); 
@@ -91,10 +98,13 @@ function removeComplete(){
   }); 
 }
 
-function showIncomplete(){
- $.get('/todos', function(data) {
+function filter(){
+  var $id = $(this).attr('id');
+  var str = ($id === "showIncomplete") ? "incomplete" : "complete";
+  
+  $.get('/todos', function(data) {
     var filtered = data.filter(function(entry){
-      return (entry.completion === "incomplete"); 
+      return (entry.completion === str); 
     });
     var $todos = filtered.map(function(item) {
       var $item = $('<div>').addClass('item row'); 
