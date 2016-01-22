@@ -65,7 +65,20 @@ app.put('/todos/:itemindex', function(req, res) {
       res.send();
     });
   });
+});
 
+app.delete('/todos/:itemindex', function(req, res) {
+  var index = parseInt(req.params.itemindex);
+  fs.readFile('./todos.json', function(err, data) {
+    if(err) return res.status(400).send(err);
+    var arr = JSON.parse(data);
+    arr.splice(index, 1); 
+    
+    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
+      if(err) return res.status(400).send(err);
+      res.send();
+    });
+  });
 });
 
 
