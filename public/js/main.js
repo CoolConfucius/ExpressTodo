@@ -14,14 +14,16 @@ function init() {
 
 function addTodo() {
   var newTask = $('#newTask').val();
-  $.post('/todos', { task: newTask, completion: "incomplete" })
+  var newDue = $('#newDue').val(); 
+  $.post('/todos', { task: newTask, completion: "incomplete", due: newDue })
   .success(function(data) {
     var $item = $('<div>').addClass('item row'); 
-    var $task = $('<span>').text(newTask).addClass('col-xs-7 task'); 
+    var $task = $('<span>').text(newTask).addClass('col-xs-6 task'); 
+    var $due = $('<span>').text(newDue).addClass('col-xs-2 due'); 
     var $completion = $('<span>').text("incomplete").addClass('col-xs-2 completion'); 
     var $toggle = $('<button>').addClass('toggle col-xs-1 btn btn-primary btn-sm').text('Toggle');
     var $remove = $('<button>').addClass('remove col-xs-1 btn btn-danger btn-sm').text('X');
-    $item.append($task, $completion, $toggle, $remove);
+    $item.append($task, $completion, $due, $toggle, $remove);
     $('#output').append($item);
   })
   .fail(function(err) {
@@ -33,11 +35,12 @@ function populateTodos() {
   $.get('/todos', function(data) {
     var $todos = data.map(function(item) {
       var $item = $('<div>').addClass('item row'); 
-      var $task = $('<span>').text(item.task).addClass('col-xs-7 task'); 
+      var $task = $('<span>').text(item.task).addClass('col-xs-6 task'); 
+      var $due = $('<span>').text(item.due).addClass('col-xs-2 due'); 
       var $completion = $('<span>').text(item.completion).addClass('col-xs-2 completion'); 
       var $toggle = $('<button>').addClass('toggle col-xs-1 btn btn-primary btn-sm').text('Toggle');
       var $remove = $('<button>').addClass('remove col-xs-1 btn btn-danger btn-sm').text('X');
-      $item.append($task, $completion, $toggle, $remove);
+      $item.append($task, $completion, $due, $toggle, $remove);
       return $item;
     });
     $('#output').append($todos);
@@ -95,11 +98,12 @@ function showIncomplete(){
     });
     var $todos = filtered.map(function(item) {
       var $item = $('<div>').addClass('item row'); 
-      var $task = $('<span>').text(item.task).addClass('col-xs-7 task'); 
+      var $task = $('<span>').text(item.task).addClass('col-xs-6 task'); 
+      var $due = $('<span>').text(item.due).addClass('col-xs-2 due'); 
       var $completion = $('<span>').text(item.completion).addClass('col-xs-2 completion'); 
       var $toggle = $('<button>').addClass('toggle col-xs-1 btn btn-primary btn-sm').text('Toggle');
       var $remove = $('<button>').addClass('remove col-xs-1 btn btn-danger btn-sm').text('X');
-      $item.append($task, $completion, $toggle, $remove);
+      $item.append($task, $completion, $due, $toggle, $remove);
       return $item;
     });
     $('#output').empty().append($todos);

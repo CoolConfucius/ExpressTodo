@@ -36,7 +36,8 @@ app.post('/todos', function(req, res) {
     var arr = JSON.parse(data);
     var todo = {
       task: req.body.task, 
-      completion: req.body.completion
+      completion: req.body.completion, 
+      due: req.body.due
     }
 
     arr.push(todo);

@@ -1,3 +1,22 @@
+*{
+  line-height: 1.5; 
+  overflow: auto; 
+  font-family: Helvetica; 
+}
+
+span{
+  font-size: 16px; 
+}
+
+#form{
+  background-color: #ddd;
+}
+
+#labels{
+  border-bottom: solid;
+}
+
 #output .item:nth-child(odd) {
     background-color: #dddddd;   
 }
+
