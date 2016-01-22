@@ -1,6 +1,7 @@
 'use strict';
 
 var PORT = 4000;
+var DATAFILE = './todos.json';
 
 // bring in dependencies / libraries
 var express = require('express');
@@ -23,116 +24,116 @@ app.get('/', function(req, res) {
 });
 
 app.get('/todos', function(req, res) {
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
-    res.send(arr);
-  });
+  readTodos(function(todos){
+    res.send(todos); 
+  })
 });
 
 app.post('/todos', function(req, res) {
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
-    var todo = {
-      task: req.body.task, 
-      completion: req.body.completion, 
-      due: req.body.due
-    }
 
-    arr.push(todo);
-    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
-      if(err) return res.status(400).send(err);
-      res.send();
-    });
-  });
+  var newTodo = {
+    task: req.body.task, 
+    completion: req.body.completion, 
+    due: req.body.due
+  }
+  readTodos(function(todos){
+    todos.push(newTodo);
+    writeTodos(todos, function(err){
+      res.send(todos);
+    })
+  })
+
 });
 
 
 app.put('/todos/:itemindex', function(req, res) {
   var index = parseInt(req.params.itemindex);
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
-    if (arr[index].completion === "incomplete") {
-      arr[index].completion = "complete"; 
+
+  readTodos(function(todos){
+    if (todos[index].completion === "incomplete") {
+      todos[index].completion = "complete"; 
     } else {
-      arr[index].completion = "incomplete"; 
+      todos[index].completion = "incomplete"; 
     };
-    
-    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
-      if(err) return res.status(400).send(err);
-      res.send();
+    writeTodos(todos, function(err){
+      res.send(todos);
     });
   });
 });
 
 app.delete('/todos/:itemindex', function(req, res) {
   var index = parseInt(req.params.itemindex);
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
-    arr.splice(index, 1); 
-    
-    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
-      if(err) return res.status(400).send(err);
-      res.send();
+
+  readTodos(function(todos){
+    todos.splice(index, 1);
+
+    writeTodos(todos, function(err){
+      res.send(todos);
     });
   });
 });
 
 
 app.delete('/todos', function(req, res) {
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
+
+  readTodos(function(todos){
     var indexes = [];
-    arr.forEach(function(entry, index){
+    todos.forEach(function(entry, index){
       if (entry.completion === "complete") {
         indexes.push(index); 
       };
     })
-    _.pullAt(arr, indexes); 
-    
-    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
-      if(err) return res.status(400).send(err);
-      res.send();
+    _.pullAt(todos, indexes); 
+
+    writeTodos(todos, function(err){
+      res.send(todos);
     });
   });
+
 });
 
 app.get('/todos/sort/:az', function(req, res) {
   var az = req.params.az;
-  fs.readFile('./todos.json', function(err, data) {
-    if(err) return res.status(400).send(err);
-    var arr = JSON.parse(data);
-    var todo = {
-      task: req.body.task, 
-      completion: req.body.completion, 
-      due: req.body.due
-    }
 
+  readTodos(function(todos){
     switch(az) {
       case 'a': 
-        arr = sortAlpha(arr, false); 
+        todos = sortAlpha(todos, false); 
         break;
       case 'z':
-        arr = sortAlpha(arr, true); 
+        todos = sortAlpha(todos, true); 
         break;
       case 'd': 
-        arr = sortDue(arr, false); 
+        todos = sortDue(todos, false); 
         break;
       case 'r': 
-        arr = sortDue(arr, true); 
+        todos = sortDue(todos, true); 
         break;
     }
 
-    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
-      if(err) return res.status(400).send(err);
-      res.send();
+    writeTodos(todos, function(err){
+      res.send(todos);
     });
   });
+
+
 });
+
+
+function readTodos(cb){
+  fs.readFile(DATAFILE, function(err, data){
+    if(err) return res.status(400).send(err);
+    var todos = JSON.parse(data); 
+    cb(todos); 
+  }); 
+}
+
+function writeTodos(todos, cb){
+  fs.writeFile(DATAFILE, JSON.stringify(todos), function(err){
+    cb(err); 
+  })
+}
+
 
 
 function sortAlpha(array, isAlpha){
