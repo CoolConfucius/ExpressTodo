@@ -1,5 +1,7 @@
 'use strict';
 
+var isAlpha = false; 
+
 $(document).ready(init);
 
 function init() {
@@ -24,7 +26,7 @@ function addTodo() {
   
   $.post('/todos', { task: newTask, completion: "incomplete", due: newDue })
   .success(function(data) {
-    var $item = $('<div>').addClass('item row'); 
+    var $item = $('<div>').addClass('item incomplete row'); 
     var $task = $('<span>').text(newTask).addClass('col-xs-6 task'); 
     var $due = $('<span>').text(newDue).addClass('col-xs-2 due'); 
     var $completion = $('<span>').text("incomplete").addClass('col-xs-2 completion'); 
@@ -42,6 +44,12 @@ function populateTodos() {
   $.get('/todos', function(data) {
     var $todos = data.map(function(item) {
       var $item = $('<div>').addClass('item row'); 
+      if (item.completion === "complete") {
+        $item.addClass('complete');
+      } else {
+        $item.addClass('incomplete');
+      }
+
       var $task = $('<span>').text(item.task).addClass('col-xs-6 task'); 
       var $due = $('<span>').text(item.due).addClass('col-xs-2 due'); 
       var $completion = $('<span>').text(item.completion).addClass('col-xs-2 completion'); 
@@ -61,8 +69,10 @@ function toggle(){
   var $completion = $item.find('.completion'); 
   if ($completion.text() === "incomplete") {
     $completion.text('complete'); 
+    $item.removeClass('incomplete').addClass('complete');
   } else {
     $completion.text('incomplete'); 
+    $item.removeClass('complete').addClass('incomplete');
   }
 
   $.ajax({
@@ -100,24 +110,13 @@ function removeComplete(){
 
 function filter(){
   var $id = $(this).attr('id');
-  var str = ($id === "showIncomplete") ? "incomplete" : "complete";
-  
-  $.get('/todos', function(data) {
-    var filtered = data.filter(function(entry){
-      return (entry.completion === str); 
-    });
-    var $todos = filtered.map(function(item) {
-      var $item = $('<div>').addClass('item row'); 
-      var $task = $('<span>').text(item.task).addClass('col-xs-6 task'); 
-      var $due = $('<span>').text(item.due).addClass('col-xs-2 due'); 
-      var $completion = $('<span>').text(item.completion).addClass('col-xs-2 completion'); 
-      var $toggle = $('<button>').addClass('toggle col-xs-1 btn btn-primary btn-sm').text('Toggle');
-      var $remove = $('<button>').addClass('remove col-xs-1 btn btn-danger btn-sm').text('X');
-      $item.append($task, $completion, $due, $toggle, $remove);
-      return $item;
-    });
-    $('#output').empty().append($todos);
-  }); 
+  // var str = ($id === "showIncomplete") ? ".incomplete" : ".complete";
+  $('.item').addClass('hide'); 
+  if ($id === "showComplete") {
+    $('.complete').removeClass('hide');
+  } else {
+    $('.incomplete').removeClass('hide');
+  }
 }
 
 function showAll(){
