@@ -33,8 +33,12 @@ app.post('/tasks', function(req, res) {
   fs.readFile('./tasks.json', function(err, data) {
     if(err) return res.status(400).send(err);
     var arr = JSON.parse(data);
-    var task = req.body.task;
-    arr.push(task);
+    var item = {
+      task: req.body.task, 
+      completion: req.body.completion
+    }
+
+    arr.push(item);
     fs.writeFile('./tasks.json', JSON.stringify(arr), function(err) {
       if(err) return res.status(400).send(err);
       res.send();
