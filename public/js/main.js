@@ -12,6 +12,7 @@ function init() {
   $('#showComplete').click(filter);
   $('#showAll').click(showAll);
   $('#sortAlpha').click(sortAlpha);
+  $('#help').click(help);
   
   $('#output').on('click', '.toggle', toggle);
   $('#output').on('click', '.remove', remove);
@@ -130,4 +131,8 @@ function sortAlpha(e){
   $.get(az, function(data) {
     showAll(); 
   });
+}
+
+function help(){
+  alert('Click on "Todos" to sort by alphabetical order of the tasks. Hold shift and click on "Todos" to reverse that order.')
 }
