@@ -12,6 +12,7 @@ function init() {
   $('#showComplete').click(filter);
   $('#showAll').click(showAll);
   $('#sortAlpha').click(sortAlpha);
+  $('#sortDue').click(sortDue);
   $('#help').click(help);
   
   $('#output').on('click', '.toggle', toggle);
@@ -133,6 +134,13 @@ function sortAlpha(e){
   });
 }
 
+function sortDue(e){
+  var d = (e.shiftKey) ? "/todos/sort/r" : "/todos/sort/d"
+  $.get(d, function(data) {
+    showAll(); 
+  });
+}
+
 function help(){
-  alert('Click on "Todos" to sort by alphabetical order of the tasks. Hold shift and click on "Todos" to reverse that order.')
+  alert('Click on "Todos" to sort by alphabetical order of the tasks. Hold shift and click on "Todos" to reverse that order. Click on "Due Date" to sort items by the due date. Hold shift and click "Due Date" to reverse that order.')
 }

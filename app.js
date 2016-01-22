@@ -111,11 +111,22 @@ app.get('/todos/sort/:az', function(req, res) {
       completion: req.body.completion, 
       due: req.body.due
     }
-    if (az === "z") {
-      arr = sortAlpha(arr, true); 
-    } else {
-      arr = sortAlpha(arr, false); 
+
+    switch(az) {
+      case 'a': 
+        arr = sortAlpha(arr, false); 
+        break;
+      case 'z':
+        arr = sortAlpha(arr, true); 
+        break;
+      case 'd': 
+        arr = sortDue(arr, false); 
+        break;
+      case 'r': 
+        arr = sortDue(arr, true); 
+        break;
     }
+
     fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
       if(err) return res.status(400).send(err);
       res.send();
@@ -150,7 +161,31 @@ function sortAlpha(array, isAlpha){
   return array; 
 }; 
 
-
+function sortDue(array, reverse){
+  if (!reverse) {
+    array.sort(function(a, b){
+    if (a.due > b.due) {
+      return 1; 
+    };
+    if (a.due < b.due) {
+      return -1; 
+    };
+      return 0; 
+    });  
+  } else {
+    array.sort(function(a, b){
+    if (a.due > b.due) {
+      return -1; 
+    };
+    if (a.due < b.due) {
+      return 1; 
+    };
+      return 0; 
+    });
+  }
+  
+  return array; 
+}; 
 
 
 
