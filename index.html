@@ -4,17 +4,32 @@
   <meta charset="UTF-8">
   <title>Full Stack Todo List</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1 class="jumbotron text-center">Todo List</h1>
-  <input type="text" id="newTask" placeholder='New Task'>
-  <button id="addTodo">Add Todo</button>
-
-  <h4>Todos:</h4>
+  <div class="container">
+    <input type="text" id="newTask" placeholder='New Task'>
+    <input type="date" id="newDue" placeholder='Due Date'>
+    <button id="addTodo">Add Todo</button>
+    <button id="removeComplete">Remove completed</button>
+    <br>
+  </div>
+  
+  <div class="container">
+    <div class="row">
+      <h4 class="col-xs-7">Todos:</h4>
+    </div>
+  </div>
   <div id="output" class="container"></div>
+
+
+
 
   <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="js/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
 </body>
 </html>

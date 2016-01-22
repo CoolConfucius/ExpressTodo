@@ -3,8 +3,9 @@
 $(document).ready(init);
 
 function init() {
-  populateTasks();
+  populateTodos();
   $('#addTodo').click(addTodo);
+  $('#removeComplete').click(removeComplete);
   $('#output').on('click', '.toggle', toggle);
   $('#output').on('click', '.remove', remove);
 }
@@ -26,7 +27,7 @@ function addTodo() {
   });
 }
 
-function populateTasks() {
+function populateTodos() {
   $.get('/todos', function(data) {
     var $todos = data.map(function(item) {
       var $item = $('<div>').addClass('item row'); 
@@ -47,7 +48,7 @@ function toggle(){
   var index = $item.index(); 
   var $completion = $item.find('.completion'); 
   if ($completion.text() === "incomplete") {
-    $completion.text('completion'); 
+    $completion.text('complete'); 
   } else {
     $completion.text('incomplete'); 
   }
@@ -67,4 +68,20 @@ function remove(){
     url: "/todos/"+index,
     method: "DELETE"
   });
+}
+
+
+function removeComplete(){
+  var $items = $('#output').children('.item'); 
+  $items.each(function( index ){
+    if ($items.eq(index).children('.completion').text() === "complete") {
+      $items.eq(index).addClass("toRemove"); 
+    };
+  });
+  $('.toRemove').remove(); 
+
+  $.ajax({
+    url: "/todos",
+    method: "DELETE"
+  }); 
 }

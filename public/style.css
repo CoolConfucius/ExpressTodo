@@ -1,0 +1,3 @@
+#output .item:nth-child(odd) {
+    background-color: #CCC4AD;   
+}
