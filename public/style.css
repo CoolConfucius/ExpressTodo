@@ -24,3 +24,6 @@ span{
   display: none; 
 }
 
+#sortAlpha{
+  cursor: pointer; 
+}

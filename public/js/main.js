@@ -11,6 +11,8 @@ function init() {
   $('#showIncomplete').click(filter);
   $('#showComplete').click(filter);
   $('#showAll').click(showAll);
+  $('#sortAlpha').click(sortAlpha);
+  
   $('#output').on('click', '.toggle', toggle);
   $('#output').on('click', '.remove', remove);
 }
@@ -110,7 +112,6 @@ function removeComplete(){
 
 function filter(){
   var $id = $(this).attr('id');
-  // var str = ($id === "showIncomplete") ? ".incomplete" : ".complete";
   $('.item').addClass('hide'); 
   if ($id === "showComplete") {
     $('.complete').removeClass('hide');
@@ -122,4 +123,11 @@ function filter(){
 function showAll(){
   $('#output').empty();
   populateTodos();
+}
+
+function sortAlpha(e){
+  var az = (e.shiftKey) ? "/todos/sort/z" : "/todos/sort/a"
+  $.get(az, function(data) {
+    showAll(); 
+  });
 }

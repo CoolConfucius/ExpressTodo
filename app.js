@@ -101,6 +101,57 @@ app.delete('/todos', function(req, res) {
   });
 });
 
+app.get('/todos/sort/:az', function(req, res) {
+  var az = req.params.az;
+  fs.readFile('./todos.json', function(err, data) {
+    if(err) return res.status(400).send(err);
+    var arr = JSON.parse(data);
+    var todo = {
+      task: req.body.task, 
+      completion: req.body.completion, 
+      due: req.body.due
+    }
+    if (az === "z") {
+      arr = sortAlpha(arr, true); 
+    } else {
+      arr = sortAlpha(arr, false); 
+    }
+    fs.writeFile('./todos.json', JSON.stringify(arr), function(err) {
+      if(err) return res.status(400).send(err);
+      res.send();
+    });
+  });
+});
+
+
+function sortAlpha(array, isAlpha){
+  if (!isAlpha) {
+    array.sort(function(a, b){
+    if (a.task > b.task) {
+      return 1; 
+    };
+    if (a.task < b.task) {
+      return -1; 
+    };
+      return 0; 
+    });  
+  } else {
+    array.sort(function(a, b){
+    if (a.task > b.task) {
+      return -1; 
+    };
+    if (a.task < b.task) {
+      return 1; 
+    };
+      return 0; 
+    });
+  }
+  
+  return array; 
+}; 
+
+
+
 
 
 // spin up server
