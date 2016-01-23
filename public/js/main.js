@@ -1,7 +1,5 @@
 'use strict';
 
-var isAlpha = false; 
-
 $(document).ready(init);
 
 function init() {
